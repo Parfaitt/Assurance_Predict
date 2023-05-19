@@ -9,7 +9,7 @@ Created on Mon Feb  6 09:56:29 2023
 import numpy as np
 import pickle
 import streamlit as st
-
+import pandas as pd
 # loading the saved model
 loaded_model = pickle.load(open('medical_insurance_cost_predictor.sav', 'rb'))
 
@@ -27,28 +27,46 @@ def medical_insurance_cost_prediction(input_data):
     return prediction
 
 def main():
+    @st.cache_data(persist=True)
+    def load_data():
+        data=pd.read_csv("insurance.csv")
+        return data
+    
+    df=load_data()
+    df_sample=df.sample(5)
+    st.sidebar.header("Les paramtres d'entrées")
+    st.sidebar.write('''
+    # PRÉDICTION DES COÛTS D'ASSURANCE MÉDICALE 
+    Il s'agit d'un projet d'apprentissage automatique de prédiction des coûts d'assurance   médicale.
+    
+    Auteur: Parfait Tanoh N'goran
+    ''')
+    if st.sidebar.checkbox("Afficher les données brutes",False):
+        st.subheader("Jeux de données brutes")
+        st.write(df_sample)
+
+    seed=123
     
     #giving a title
-    st.title('Medical Insurance Prediction Web App')
+    st.title("Application Web de prédiction d'assurance médicale")
     
     #getting input from the user
     
     age = st.text_input('Age')
-    sex = st.text_input('Sex: 0 -> Female, 1 -> Male')
-    bmi = st.text_input('Body Mass Index')
-    children = st.text_input('Number of Children')
-    smoker = st.text_input('Smoker: 0 -> No, 1 -> Yes')
-    region = st.text_input('Region of Living: 0 -> NorthEast, 1-> NorthWest, 2-> SouthEast, 3-> SouthWest')
+    sex = st.selectbox('Sex: 0 -> Femme, 1 -> Garçon',[0,1])
+    bmi = st.text_input('(BMI) indique le rapport entre votre poids et votre taille','25.5')
+    children = st.text_input("Nombre d'enfant/Personnes prise en charge")
+    smoker = st.selectbox('Fumeur: 0 -> No, 1 -> Yes', [0,1])
+    region = st.text_input('Region: 0 -> NorthEast, 1-> NorthWest, 2-> SouthEast, 3-> SouthWest')
     
     #code for prediction
     diagnosis = ''
     
     # getting the input data from the user
-    if st.button('Predicted Medical Insurance Cost: '):
+    if st.button("Prédire le Coût d'assurance :"):
         diagnosis = medical_insurance_cost_prediction([age,sex,bmi,children,smoker,region])
         
     st.success(diagnosis)
-    
 
 if __name__ == '__main__':
     main()
