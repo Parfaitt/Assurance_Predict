@@ -27,7 +27,6 @@ def medical_insurance_cost_prediction(input_data):
     return prediction
 
 def main():
-    @st.cache_data()
     def load_data():
         data=pd.read_csv("insurance.csv")
         return data
