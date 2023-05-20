@@ -10,6 +10,9 @@ import numpy as np
 import pickle
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
 # loading the saved model
 loaded_model = pickle.load(open('medical_insurance_cost_predictor.sav', 'rb'))
 
@@ -40,12 +43,23 @@ def main():
     
     Auteur: Parfait Tanoh N'goran
     ''')
+    st.title("Contruire le nuage de piont")
+    num=df.select_dtypes(exclude="object").columns.to_list()
+    var_x=st.selectbox("Choisis la varaible en abscice", num)
+    var_y=st.selectbox("Choisis la varaible en ordonée", num)
+    fig = px.scatter(
+        df, x=var_x , y=var_y, title=str(var_y)+ " vs " +str(var_x)
+    )
+    
     if st.sidebar.checkbox("Afficher les données brutes",False):
         st.subheader("Jeux de données brutes")
         st.write(df_sample)
-
+        
+    if st.sidebar.checkbox("Afficher le nuage de point",False):
+        st.subheader("Nuage de point")
+        st.write(fig, var_x, var_y)
     seed=123
-    
+    #Diagrmme
     #giving a title
     st.title("Application Web de prédiction d'assurance médicale")
     
@@ -64,8 +78,9 @@ def main():
     # getting the input data from the user
     if st.button("Prédire le Coût d'assurance :"):
         diagnosis = medical_insurance_cost_prediction([age,sex,bmi,children,smoker,region])
-        
-    st.success(diagnosis)
+        st.success(diagnosis)
+    else:
+        st.error("Veillez remplir tous les champs vides")
 
 if __name__ == '__main__':
     main()
