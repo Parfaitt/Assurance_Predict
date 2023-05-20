@@ -10,7 +10,7 @@ import numpy as np
 import pickle
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+
 # loading the saved model
 loaded_model = pickle.load(open('medical_insurance_cost_predictor.sav', 'rb'))
 
@@ -34,29 +34,16 @@ def main():
     
     df=load_data()
     df_sample=df.sample(5)
-    st.sidebar.header("Les paramtres d'entrées")
+    st.sidebar.header("Informations")
     st.sidebar.write('''
     # PRÉDICTION DES COÛTS D'ASSURANCE MÉDICALE 
     Il s'agit d'un projet d'apprentissage automatique de prédiction des coûts d'assurance   médicale.
     
     Auteur: Parfait Tanoh N'goran
     ''')
-    st.title("Contruire le nuage de piont")
-    num=df.select_dtypes(exclude="object").columns.to_list()
-    var_x=st.selectbox("Choisis la varaible en abscice", num)
-    var_y=st.selectbox("Choisis la varaible en ordonée", num)
-    fig = px.scatter(
-        df, x=var_x , y=var_y, title=str(var_y)+ " vs " +str(var_x)
-    )
-    
     if st.sidebar.checkbox("Afficher les données brutes",False):
         st.subheader("Jeux de données brutes")
         st.write(df_sample)
-        
-    if st.sidebar.checkbox("Afficher le nuage de point",False):
-        st.subheader("Nuage de point")
-        st.write(fig, var_x, var_y)
-    seed=123
     #Diagrmme
     #giving a title
     st.title("Application Web de prédiction d'assurance médicale")
