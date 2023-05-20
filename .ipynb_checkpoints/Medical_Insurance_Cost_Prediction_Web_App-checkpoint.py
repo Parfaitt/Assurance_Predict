@@ -10,8 +10,6 @@ import numpy as np
 import pickle
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 # loading the saved model
 loaded_model = pickle.load(open('medical_insurance_cost_predictor.sav', 'rb'))
